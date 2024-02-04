@@ -1,3 +1,4 @@
+import Github from "../../assets/icons/Github";
 import Tank from "./components/Tank";
 import TankActions from "./components/TankActions";
 import TankConfig from "./components/TankConfig";
@@ -16,7 +17,16 @@ const TankBalancer = () => {
   } = useTankBalancer();
   return (
     <main>
+      <a
+        className="flexCenter"
+        href="https://github.com/puneetsingh99/water-distribution"
+        target="_blank"
+      >
+        <Github />
+        Source code
+      </a>
       <h1>Tank level Balancer</h1>
+
       <button onClick={onAddNewTank}>Add new tank</button>
       <ul className="tankContainer">
         {tanks.map((tank) => {
