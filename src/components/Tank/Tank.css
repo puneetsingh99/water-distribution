@@ -1,0 +1,31 @@
+.tank {
+  border: solid 2px gray;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.tankLevel {
+  background-color: rgb(18, 86, 147);
+}
+
+.btnContainer {
+  width: 120px;
+}
+
+.btnPrimary {
+  background-color: green;
+}
+
+.btnSecondary {
+  background-color: transparent;
+  border: solid 2px red;
+}
+
+.mb-1 {
+  margin-bottom: 1rem;
+}
+
+.fullWidth {
+  width: 100%;
+}

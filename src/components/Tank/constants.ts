@@ -1,0 +1,15 @@
+export const DEFAULT_TANK_CAPACITY_IN_LITRE = 2000;
+export const MIN_TANK_CAPACITY_IN_LITRE = 100;
+export const MAX_TANK_CAPACITY_IN_LITRE = 4000;
+
+export const DEFAULT_TANK_INCREMENT_IN_LITRE = 200;
+export const MIN_TANK_INCREMENT_IN_LITRE = 25;
+export const MAX_TANK_INCREMENT_IN_LITRE = 500;
+
+export const DEFAULT_TANK_RATE_IN_LITRE = 100;
+export const MIN_TANK_RATE_IN_LITRE = 25;
+export const MAX_TANK_RATE_IN_LITRE = 500;
+
+export const TANK_HEIGHT = 150;
+export const TANK_WIDTH = 120;
+export const BORDER_RADIUS = 15;
