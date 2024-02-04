@@ -37,6 +37,10 @@ li {
   list-style: none;
 }
 
+.mb-2 {
+  margin-bottom: 2rem;
+}
+
 .card {
   padding: 2em;
 }
@@ -68,4 +72,8 @@ li {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+}
+
+.textLeft {
+  text-align: left;
 }

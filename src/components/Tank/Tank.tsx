@@ -9,6 +9,7 @@ type TankDimensions = {
 };
 
 type TankProps = {
+  id: number;
   level: number;
   capacityInLitre: number;
   dimensions: TankDimensions;
@@ -16,7 +17,7 @@ type TankProps = {
 };
 
 const Tank = React.forwardRef<HTMLDivElement, TankProps>(
-  ({ level = 0, capacityInLitre, dimensions, onTransitionEnd }, ref) => {
+  ({ id, level = 0, capacityInLitre, dimensions, onTransitionEnd }, ref) => {
     const tankLevelHeight = Math.min(
       dimensions.height,
       dimensions.height * level
@@ -43,7 +44,9 @@ const Tank = React.forwardRef<HTMLDivElement, TankProps>(
             onTransitionEnd={onTransitionEnd}
           />
         </div>
-        <p>Tank level: {tankLevel.toLocaleString()} L</p>
+        <h3 className="textLeft">
+          Tank {id}: {tankLevel.toLocaleString()} L
+        </h3>
       </>
     );
   }
