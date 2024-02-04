@@ -1,19 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
   DEFAULT_TANK_CAPACITY_IN_LITRE,
-  MAX_TANK_CAPACITY_IN_LITRE,
-  MIN_TANK_CAPACITY_IN_LITRE,
   DEFAULT_TANK_INCREMENT_IN_LITRE,
   DEFAULT_TANK_RATE_IN_LITRE,
-  MIN_TANK_RATE_IN_LITRE,
+  MAX_TANK_CAPACITY_IN_LITRE,
   MAX_TANK_RATE_IN_LITRE,
-} from "./constants";
-import { TankData } from "../../App";
-
-export type TankConfigData = Pick<
-  TankData,
-  "tankCapacity" | "incrementAmount" | "tankRate"
->;
+  MIN_TANK_CAPACITY_IN_LITRE,
+  MIN_TANK_RATE_IN_LITRE,
+} from "../constants";
+import { TankConfigData } from "../types";
 
 type TankConfigProps = {
   onSetConfig: (config: TankConfigData) => void;
