@@ -20,36 +20,17 @@ export type TankData = {
   incrementAmount: number;
 };
 
-const initialTanks: TankData[] = [
-  {
-    id: 1,
+const createDefaultTank = (id: number) => {
+  return {
+    id,
     level: 0,
     tankCapacity: DEFAULT_TANK_CAPACITY_IN_LITRE,
     tankRate: DEFAULT_TANK_RATE_IN_LITRE,
     incrementAmount: DEFAULT_TANK_INCREMENT_IN_LITRE,
-  },
-  {
-    id: 2,
-    level: 0,
-    tankCapacity: DEFAULT_TANK_CAPACITY_IN_LITRE,
-    tankRate: DEFAULT_TANK_RATE_IN_LITRE,
-    incrementAmount: DEFAULT_TANK_INCREMENT_IN_LITRE,
-  },
-  {
-    id: 3,
-    level: 0,
-    tankCapacity: DEFAULT_TANK_CAPACITY_IN_LITRE,
-    tankRate: DEFAULT_TANK_RATE_IN_LITRE,
-    incrementAmount: DEFAULT_TANK_INCREMENT_IN_LITRE,
-  },
-  {
-    id: 4,
-    level: 0,
-    tankCapacity: DEFAULT_TANK_CAPACITY_IN_LITRE,
-    tankRate: DEFAULT_TANK_RATE_IN_LITRE,
-    incrementAmount: DEFAULT_TANK_INCREMENT_IN_LITRE,
-  },
-];
+  };
+};
+
+const initialTanks: TankData[] = [createDefaultTank(1), createDefaultTank(2)];
 
 const balanceTankLevels = (tanks: TankData[]) =>
   tanks.reduce((sum, tank) => sum + tank.level, 0) / tanks.length;
@@ -58,10 +39,14 @@ function App() {
   const [tanks, setTanks] = useState(initialTanks);
   const tankLevelRef = useRef<Record<number, HTMLDivElement | null>>({});
 
-  const onBalanceLevel = () => {
-    const balancedLevel = balanceTankLevels(tanks);
-    setTanks((prev) => prev.map((tank) => ({ ...tank, level: balancedLevel })));
-  };
+  const onBalanceLevel = useCallback(() => {
+    setTanks((prevTanks) =>
+      prevTanks.map((tank) => ({
+        ...tank,
+        level: balanceTankLevels(prevTanks),
+      }))
+    );
+  }, []);
 
   const onAdd = (id: number) => {
     setTanks((prev) =>
@@ -107,6 +92,10 @@ function App() {
     );
   };
 
+  const onAddNewTank = () => {
+    setTanks((prev) => [...prev, createDefaultTank(tanks.length + 1)]);
+  };
+
   const onSetTransition = useCallback(
     (id: number) => {
       const ref = tankLevelRef.current?.[id];
@@ -127,19 +116,25 @@ function App() {
     }
   }, [onSetTransition, tanks]);
 
+  useEffect(() => {
+    onBalanceLevel();
+  }, [onBalanceLevel, tanks.length]);
+
   return (
     <>
       <h1>Tank level Balancer</h1>
+      <button onClick={onAddNewTank}>Add new tank</button>
       <ul className="tankContainer">
         {tanks.map((tank) => {
           const tankLevel = tank.level / tank.tankCapacity;
           return (
-            <li key={tank.id}>
+            <li key={tank.id} className="mb-2">
               <TankActions
                 onAdd={() => onAdd(tank.id)}
                 onEmpty={() => onEmpty(tank.id)}
               />
               <Tank
+                id={tank.id}
                 ref={(element) => (tankLevelRef.current[tank.id] = element)}
                 level={tankLevel}
                 capacityInLitre={tank.tankCapacity}
