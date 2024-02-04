@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   DEFAULT_TANK_CAPACITY_IN_LITRE,
   MAX_TANK_CAPACITY_IN_LITRE,
@@ -8,29 +8,32 @@ import {
   MIN_TANK_RATE_IN_LITRE,
   MAX_TANK_RATE_IN_LITRE,
 } from "./constants";
+import { TankData } from "../../App";
+
+export type TankConfigData = Pick<
+  TankData,
+  "tankCapacity" | "incrementAmount" | "tankRate"
+>;
 
 type TankConfigProps = {
-  onSetConfig: () => void;
+  onSetConfig: (config: TankConfigData) => void;
 };
 
-type TankConfig = {
-  tankCapacity: number;
-  tankRate: number;
-  incrementAmount: number;
-};
-
-const defaultTankConfig: TankConfig = {
+const defaultTankConfig: TankConfigData = {
   tankCapacity: DEFAULT_TANK_CAPACITY_IN_LITRE,
   tankRate: DEFAULT_TANK_RATE_IN_LITRE,
   incrementAmount: DEFAULT_TANK_INCREMENT_IN_LITRE,
 };
-const useTankConfig = (onTankConfigUpdate: (config: TankConfig) => void) => {
-  const [tankConfig, setTankConfig] = useState<TankConfig>(defaultTankConfig);
+const useTankConfig = (
+  onTankConfigUpdate: (config: TankConfigData) => void
+) => {
+  const [tankConfig, setTankConfig] =
+    useState<TankConfigData>(defaultTankConfig);
   const onTankConfigUpdateRef = useRef(onTankConfigUpdate);
 
-  const updateTankConfig = <K extends keyof TankConfig>(
+  const updateTankConfig = <K extends keyof TankConfigData>(
     key: K,
-    value: TankConfig[K]
+    value: TankConfigData[K]
   ) => {
     setTankConfig((prev) => ({ ...prev, [key]: value }));
   };
@@ -70,7 +73,7 @@ const TankConfig: React.FunctionComponent<TankConfigProps> = ({
     onIncrementAmountChange,
     onTankCapacityChange,
     onTankRateChange,
-  } = useTankConfig((config) => onSetConfig({}));
+  } = useTankConfig(onSetConfig);
   return (
     <section className="tankConfigContainer">
       <p>

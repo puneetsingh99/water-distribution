@@ -21,6 +21,7 @@ const Tank = React.forwardRef<HTMLDivElement, TankProps>(
       dimensions.height,
       dimensions.height * level
     );
+    const tankLevel = Math.min(capacityInLitre, level * capacityInLitre);
     return (
       <>
         <div
@@ -42,7 +43,7 @@ const Tank = React.forwardRef<HTMLDivElement, TankProps>(
             onTransitionEnd={onTransitionEnd}
           />
         </div>
-        <p>{(level * capacityInLitre).toLocaleString()} L</p>
+        <p>Tank level: {tankLevel.toLocaleString()} L</p>
       </>
     );
   }

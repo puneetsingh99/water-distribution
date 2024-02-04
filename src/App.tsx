@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import "./App.css";
 import Tank from "./components/Tank/Tank";
 import TankActions from "./components/Tank/TankActions";
@@ -10,29 +10,44 @@ import {
   TANK_WIDTH,
   DEFAULT_TANK_INCREMENT_IN_LITRE,
 } from "./components/Tank/constants";
-import TankConfig from "./components/Tank/TankConfig";
+import TankConfig, { TankConfigData } from "./components/Tank/TankConfig";
 
-type TankData = {
+export type TankData = {
   id: number;
   level: number;
+  tankCapacity: number;
+  tankRate: number;
+  incrementAmount: number;
 };
 
 const initialTanks: TankData[] = [
   {
     id: 1,
     level: 0,
+    tankCapacity: DEFAULT_TANK_CAPACITY_IN_LITRE,
+    tankRate: DEFAULT_TANK_RATE_IN_LITRE,
+    incrementAmount: DEFAULT_TANK_INCREMENT_IN_LITRE,
   },
   {
     id: 2,
     level: 0,
+    tankCapacity: DEFAULT_TANK_CAPACITY_IN_LITRE,
+    tankRate: DEFAULT_TANK_RATE_IN_LITRE,
+    incrementAmount: DEFAULT_TANK_INCREMENT_IN_LITRE,
   },
   {
     id: 3,
     level: 0,
+    tankCapacity: DEFAULT_TANK_CAPACITY_IN_LITRE,
+    tankRate: DEFAULT_TANK_RATE_IN_LITRE,
+    incrementAmount: DEFAULT_TANK_INCREMENT_IN_LITRE,
   },
   {
     id: 4,
     level: 0,
+    tankCapacity: DEFAULT_TANK_CAPACITY_IN_LITRE,
+    tankRate: DEFAULT_TANK_RATE_IN_LITRE,
+    incrementAmount: DEFAULT_TANK_INCREMENT_IN_LITRE,
   },
 ];
 
@@ -55,8 +70,8 @@ function App() {
           ? {
               ...tank,
               level: Math.min(
-                DEFAULT_TANK_CAPACITY_IN_LITRE,
-                tank.level + DEFAULT_TANK_INCREMENT_IN_LITRE
+                tank.tankCapacity,
+                tank.level + tank.incrementAmount
               ),
             }
           : tank
@@ -77,14 +92,32 @@ function App() {
     );
   };
 
-  const onSetTransition = (id: number) => {
-    const ref = tankLevelRef.current?.[id];
-    if (ref) {
-      const duration =
-        DEFAULT_TANK_INCREMENT_IN_LITRE / DEFAULT_TANK_RATE_IN_LITRE;
-      ref.style.transition = `height ${duration}s ease`;
-    }
+  const onSetConfig = ({
+    id,
+    incrementAmount,
+    tankCapacity,
+    tankRate,
+  }: { id: number } & TankConfigData) => {
+    setTanks((prev) =>
+      prev.map((tank) =>
+        tank.id === id
+          ? { ...tank, incrementAmount, tankCapacity, tankRate }
+          : tank
+      )
+    );
   };
+
+  const onSetTransition = useCallback(
+    (id: number) => {
+      const ref = tankLevelRef.current?.[id];
+      const tank = tanks.find((tank) => tank.id === id);
+      if (ref && tank) {
+        const duration = tank.incrementAmount / tank.tankRate;
+        ref.style.transition = `height ${duration}s ease`;
+      }
+    },
+    [tanks]
+  );
 
   useEffect(() => {
     if (tankLevelRef.current) {
@@ -92,14 +125,14 @@ function App() {
         onSetTransition(Number(tankId))
       );
     }
-  }, [tanks]);
+  }, [onSetTransition, tanks]);
 
   return (
     <>
       <h1>Tank level Balancer</h1>
       <ul className="tankContainer">
         {tanks.map((tank) => {
-          const tankLevel = tank.level / DEFAULT_TANK_CAPACITY_IN_LITRE;
+          const tankLevel = tank.level / tank.tankCapacity;
           return (
             <li key={tank.id}>
               <TankActions
@@ -109,7 +142,7 @@ function App() {
               <Tank
                 ref={(element) => (tankLevelRef.current[tank.id] = element)}
                 level={tankLevel}
-                capacityInLitre={DEFAULT_TANK_CAPACITY_IN_LITRE}
+                capacityInLitre={tank.tankCapacity}
                 dimensions={{
                   height: TANK_HEIGHT,
                   width: TANK_WIDTH,
@@ -118,9 +151,9 @@ function App() {
                 onTransitionEnd={onBalanceLevel}
               />
               <TankConfig
-                onSetConfig={(params) => {
-                  console.log("ON SET CONFIG ", params);
-                }}
+                onSetConfig={(config) =>
+                  onSetConfig({ id: tank.id, ...config })
+                }
               />
             </li>
           );
